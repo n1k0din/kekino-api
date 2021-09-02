@@ -58,7 +58,20 @@ def get_movie_and_options():
 
 
 def index(request):
+    if request.POST:
+        print(request.POST)
+        print(f'{request.session.get("correct")=}')
+        if str(request.session.get('correct')) in request.POST:
+            request.session['score'] += 1
+        else:
+            request.session['score'] = 0
+
+    if 'score' not in request.session:
+        request.session['score'] = 0
+    score = request.session['score']
+
     correct_answer, incorrect_answers = get_movie_and_options()
+    request.session['correct'] = correct_answer.id
     options = [correct_answer, *incorrect_answers]
 
-    return render(request, 'index.html', {'options': options})
+    return render(request, 'index.html', {'options': options, 'score': score})
