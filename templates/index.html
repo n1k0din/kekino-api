@@ -5,11 +5,12 @@
 </head>
 
 <body>
-  <h4>{{ movie.title_ru }}</h4>
+  <form action="/" method="post">
+    {% csrf_token %}
     {% for option in options %}
-      <h5>{{ option.title_ru }}</h5>
-
+      <p><input type="submit" value="{{ option.title_ru }}" name="{{ option.id }}"></p>
     {% endfor %}
+</form>
 </body>
 
 </html>
