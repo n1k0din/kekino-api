@@ -4,9 +4,21 @@ from django.db.models import Q
 from movie.models import KinopoiskMovie
 
 
-def get_random_similar_movies(movie, amount=3, delta_years=7):
+def get_delta_by_year(year):
+    if year < 1950:
+        return 16
+    if 1950 <= year < 1980:
+        return 8
+    if 1980 <= year < 2000:
+        return 4
+    if year >= 2000:
+        return 2
+
+
+def get_random_similar_movies(movie, amount=3):
     target_year = movie.year
-    min_year, max_year = target_year - delta_years, target_year + delta_years
+    delta = get_delta_by_year(target_year)
+    min_year, max_year = target_year - delta, target_year + delta
 
     options = KinopoiskMovie.objects\
         .exclude(id=movie.id)\
