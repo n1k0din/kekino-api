@@ -1,0 +1,7 @@
+*.pyc
+poetry.lock
+res.json
+mini.json
+*.sqlite3
+.mypy_cache
+__pycache__

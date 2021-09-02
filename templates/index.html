@@ -1,0 +1,15 @@
+<html>
+
+<head>
+  <title>kinopoisk random movie</title>
+</head>
+
+<body>
+  <h4>{{ movie.title_ru }}</h4>
+    {% for option in options %}
+      <h5>{{ option.title_ru }}</h5>
+
+    {% endfor %}
+</body>
+
+</html>
