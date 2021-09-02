@@ -1,3 +1,5 @@
+from random import shuffle
+
 from django.shortcuts import render
 from django.db.models import Q
 
@@ -59,8 +61,6 @@ def get_movie_and_options():
 
 def index(request):
     if request.POST:
-        print(request.POST)
-        print(f'{request.session.get("correct")=}')
         if str(request.session.get('correct')) in request.POST:
             request.session['score'] += 1
         else:
@@ -73,5 +73,6 @@ def index(request):
     correct_answer, incorrect_answers = get_movie_and_options()
     request.session['correct'] = correct_answer.id
     options = [correct_answer, *incorrect_answers]
-
+    shuffle(options)
+    
     return render(request, 'index.html', {'options': options, 'score': score})
