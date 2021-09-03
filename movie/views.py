@@ -1,20 +1,15 @@
-import os
 from random import shuffle
 
 from django.db.models import Q
 from django.shortcuts import render
-from dotenv import load_dotenv
-from pymongo import MongoClient
 
 from movie.models import KinopoiskMovie
+from movie.utils import db
 
 SPECIAL_GENRES = [
     'аниме',
     'мультфильм',
 ]
-
-load_dotenv()
-MONGODB_URI = os.environ['MONGODB_URI']
 
 
 def get_special_genre(movie, special_genres):
@@ -67,8 +62,6 @@ def get_movie_and_options():
 
 def index(request):
     if request.POST:
-        client = MongoClient(MONGODB_URI)
-        db = client['kekino']
         movie_stats = db['movie_stats']
 
         session_correct = request.session['correct']
