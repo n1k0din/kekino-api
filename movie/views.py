@@ -1,7 +1,10 @@
+import os
 from random import shuffle
 
-from django.shortcuts import render
 from django.db.models import Q
+from django.shortcuts import render
+from dotenv import load_dotenv
+from pymongo import MongoClient
 
 from movie.models import KinopoiskMovie
 
@@ -9,6 +12,9 @@ SPECIAL_GENRES = [
     'аниме',
     'мультфильм',
 ]
+
+load_dotenv()
+MONGODB_URI = os.environ['MONGODB_URI']
 
 
 def get_special_genre(movie, special_genres):
@@ -61,10 +67,21 @@ def get_movie_and_options():
 
 def index(request):
     if request.POST:
+        client = MongoClient(MONGODB_URI)
+        db = client['kekino']
+        movie_stats = db['movie_stats']
+
+        session_correct = request.session['correct']
+
+        if not movie_stats.find_one({'_id': session_correct}):
+            movie_stats.insert_one({'_id': session_correct, 'success': 0, 'fail': 0})
+
         if str(request.session.get('correct')) in request.POST:
             request.session['score'] += 1
+            movie_stats.update_one({'_id': session_correct}, {'$inc': {'success': 1}})
         else:
             request.session['score'] = 0
+            movie_stats.update_one({'_id': session_correct}, {'$inc': {'fail': 1}})
 
     if 'score' not in request.session:
         request.session['score'] = 0
@@ -74,5 +91,5 @@ def index(request):
     request.session['correct'] = correct_answer.id
     options = [correct_answer, *incorrect_answers]
     shuffle(options)
-    
+
     return render(request, 'index.html', {'options': options, 'score': score})
