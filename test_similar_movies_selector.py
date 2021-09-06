@@ -6,10 +6,9 @@ from movie.models import KinopoiskMovie
 
 @pytest.mark.django_db
 def test_4_options():
-    for _ in range(5_000):
-        random_movie = KinopoiskMovie.objects.order_by('?').first()
-        assert random_movie
-        options = get_random_similar_movies(random_movie, amount=3)
+    movies = KinopoiskMovie.objects.all()
+    for movie in movies:
+        options = get_random_similar_movies(movie, amount=3)
         if len(options) != 3:
-            print(random_movie)
+            print(movie)
         assert len(options) == 3
