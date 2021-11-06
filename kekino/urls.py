@@ -7,6 +7,7 @@ from movie import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.index)
-    # path('movie/', include('movie.urls')),
+    url(r'^$', views.index),
+    url(r'question', views.question),
+    path('api-auth/', include('rest_framework.urls')),
 ]

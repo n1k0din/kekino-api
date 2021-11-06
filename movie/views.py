@@ -2,6 +2,8 @@ from random import choice, shuffle
 
 from django.db.models import Q
 from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from movie.models import KinopoiskMovie
 from movie.utils import db, get_movie_frames
@@ -95,3 +97,19 @@ def index(request):
     shuffle(options)
 
     return render(request, 'index.html', {'options': options, 'score': score, 'frame_url': random_frame['preview']})
+
+
+@api_view(['GET'])
+def question(request):
+    correct_answer, incorrect_answers = get_movie_and_options()
+    frames = get_movie_frames(correct_answer.kinopoisk_id)
+    random_frame = choice(frames)
+    options = [correct_answer, *incorrect_answers]
+    shuffle(options)
+
+    ru_titles = [option.title_ru for option in options]
+
+    return Response({'options': ru_titles, 'frame_url': random_frame['preview'], 'correct': correct_answer.title_ru})
+
+
+
