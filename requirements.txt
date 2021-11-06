@@ -9,7 +9,6 @@ djangorestframework
 dnspython
 idna
 iniconfig
-kekino==0.1.0
 packaging
 pluggy
 py
