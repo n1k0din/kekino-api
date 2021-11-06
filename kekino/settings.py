@@ -13,7 +13,7 @@ SECRET_KEY = '-rnh+g11%58_4t!fcoxnr75g1cfm&**_c==%k4#q)7uu266$!1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'kekinoapi.eu.pythonanywhere.com']
 
 
 # Application definition
