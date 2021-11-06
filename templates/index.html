@@ -5,6 +5,7 @@
 </head>
 
 <body>
+  <img src="{{ frame_url }}">
   <form action="/" method="post">
     {% csrf_token %}
     {% for option in options %}

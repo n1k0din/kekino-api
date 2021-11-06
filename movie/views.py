@@ -1,15 +1,21 @@
-from random import shuffle
+from random import choice, shuffle
 
 from django.db.models import Q
 from django.shortcuts import render
 
 from movie.models import KinopoiskMovie
-from movie.utils import db
+from movie.utils import db, get_movie_frames
 
 SPECIAL_GENRES = [
     'аниме',
     'мультфильм',
 ]
+
+YEAR_DELTA_MAPPING = {
+    1955: 20,
+    1980: 10,
+    2000: 5,
+}
 
 
 def get_special_genre(movie, special_genres):
@@ -19,12 +25,11 @@ def get_special_genre(movie, special_genres):
 def get_delta_by_year(year):
     if year <= 1955:
         return 20
-    if 1955 < year < 1980:
+    if year < 1980:
         return 10
-    if 1980 <= year < 2000:
+    if year < 2000:
         return 5
-    if year >= 2000:
-        return 3
+    return 3
 
 
 def get_random_similar_movies(movie, amount=3):
@@ -81,8 +86,12 @@ def index(request):
     score = request.session['score']
 
     correct_answer, incorrect_answers = get_movie_and_options()
+
+    frames = get_movie_frames(correct_answer.kinopoisk_id)
+    random_frame = choice(frames)
+
     request.session['correct'] = correct_answer.id
     options = [correct_answer, *incorrect_answers]
     shuffle(options)
 
-    return render(request, 'index.html', {'options': options, 'score': score})
+    return render(request, 'index.html', {'options': options, 'score': score, 'frame_url': random_frame['preview']})
